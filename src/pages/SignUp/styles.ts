@@ -1,8 +1,3 @@
-import React from 'react';
-import { Container } from './styles';
+import styled from 'styled-components/native';
 
-const SignUp: React.FC = () => {
-  return <Container />;
-};
-
-export default SignUp;
+export const Container = styled.View``;
