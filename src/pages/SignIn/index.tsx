@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import { useNavigation } from '@react-navigation/native';
 import logoImg from '../../assets/logo.png';
 
 import Input from '../../components/Input';
@@ -23,6 +24,8 @@ import {
 import { colors } from '../../styles/colors';
 
 const SignIn: React.FC = () => {
+  const navigation = useNavigation();
+
   return (
     <>
       {/* A keyboardAvoindigView é a área que deve aparecer ou diminuir, quando o teclado do celular é acionado, utilizamos no ios */}
@@ -67,7 +70,7 @@ const SignIn: React.FC = () => {
 
       <CreateAccountButton
         onPress={() => {
-          console.log('Criar conta');
+          navigation.navigate('SignUp');
         }}
       >
         <Icon name="log-in" size={20} color={colors.orange} />
