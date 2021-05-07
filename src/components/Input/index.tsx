@@ -1,4 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from 'react';
 import { TextInputProps } from 'react-native';
 import { useField } from '@unform/core';
 
@@ -8,18 +13,31 @@ import { Container, TextInput, Icon } from './styles';
 interface InputProps extends TextInputProps {
   name: string;
   icon: string;
-  placeholder: string;
 }
 
 interface InputValueReference {
   value: string;
 }
 
-const Input: React.FC<InputProps> = ({ name, icon, placeholder }) => {
+interface InputRef {
+  focus(): void;
+}
+
+const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
+  { name, icon, ...rest },
+  ref,
+) => {
   const inputElementRef = useRef<any>(null);
 
   const { registerField, defaultValue = '', fieldName, error } = useField(name);
   const inputValueRef = useRef<InputValueReference>({ value: defaultValue });
+
+  // Como já temos uma ref no input, temos que passar uma informação desse elemento para o pai, por isso utilizamos esse hook
+  useImperativeHandle(ref, () => ({
+    focus() {
+      inputElementRef.current.focus();
+    },
+  }));
 
   useEffect(() => {
     registerField({
@@ -43,15 +61,15 @@ const Input: React.FC<InputProps> = ({ name, icon, placeholder }) => {
 
       <TextInput
         ref={inputElementRef}
-        placeholder={placeholder}
         placeholderTextColor={colors.silver_100}
         defaultValue={defaultValue}
         onChangeText={value => {
           inputValueRef.current.value = value;
         }}
+        {...rest}
       />
     </Container>
   );
 };
 
-export default Input;
+export default forwardRef(Input);

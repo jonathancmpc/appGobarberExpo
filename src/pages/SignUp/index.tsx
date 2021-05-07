@@ -4,6 +4,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  TextInput,
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
@@ -20,6 +21,9 @@ import { colors } from '../../styles/colors';
 
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const inputEmailRef = useRef<TextInput>(null);
+  const inputPasswordRef = useRef<TextInput>(null);
+
   const navigation = useNavigation();
 
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -54,9 +58,40 @@ const SignUp: React.FC = () => {
                 width: '100%',
               }}
             >
-              <Input name="name" icon="user" placeholder="Nome" />
-              <Input name="email" icon="mail" placeholder="E-mail" />
-              <Input name="password" icon="lock" placeholder="Senha" />
+              <Input
+                name="name"
+                icon="user"
+                placeholder="Nome"
+                autoCapitalize="words" // Habilita caixa alta a primeira letra
+                returnKeyType="next" // Muda o botão enter do teclado para "Próximo"
+                onSubmitEditing={() => {
+                  inputEmailRef.current?.focus();
+                }}
+              />
+              <Input
+                ref={inputEmailRef}
+                name="email"
+                icon="mail"
+                placeholder="E-mail"
+                autoCorrect={false} // Desabilita a função do teclado que fica tentando corrigir(Corretor)
+                autoCapitalize="none" // Desabilitamos a caixa alta automática
+                keyboardType="email-address"
+                returnKeyType="next" // Muda o botão enter do teclado para "Próximo"
+                onSubmitEditing={() => {
+                  inputPasswordRef.current?.focus();
+                }}
+              />
+              <Input
+                ref={inputPasswordRef}
+                name="password"
+                icon="lock"
+                placeholder="Senha"
+                secureTextEntry // Campo senha, vira bolinhas
+                returnKeyType="send" // Muda o botão enter do teclado para "Enviar"
+                onSubmitEditing={() => {
+                  formRef.current?.submitForm();
+                }} // Quando o usuário clica no enter/enviar no teclado ele já submete
+              />
 
               <Button
                 onPress={() => {
